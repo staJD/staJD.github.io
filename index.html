@@ -306,14 +306,12 @@
 
     if (device.needsBootMode) {
       steps.push(
-        "Press and hold the board's <strong>BOOT</strong> button, then plug in the " +
-        device.cable + " while still holding it."
-      );
-      steps.push(
-        "Wait for the screen to turn <strong>blank/black</strong> &mdash; that's the sign " +
-        "it worked and the board is in upload mode. If the normal display is still showing, " +
-        "it didn't work &mdash; try again. Once it's black, keep holding BOOT about 2 more " +
-        "seconds, then release it."
+        "Press and hold the board's <strong>BOOT</strong> button. While still holding it, " +
+        "plug in the " + device.cable + ". Watch the screen: it should turn " +
+        "<strong>blank/black</strong> &mdash; that's the sign it worked and the board is in " +
+        "upload mode (if the normal display is still showing, it didn't work &mdash; try " +
+        "again). Once it's black, keep holding BOOT about 2 more seconds, <strong>then " +
+        "release it</strong>."
       );
     } else {
       steps.push("Plug the board into this computer with a " + device.cable + ".");
