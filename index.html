@@ -276,14 +276,26 @@
       back in and pick that same one.</p>
     </details>
     <details>
+      <summary>"Failed to initialize" / connecting doesn't work</summary>
+      <p>Your board needs to be in <strong>upload mode</strong> before it will accept a flash,
+      and some boards don't enter it automatically from the browser. If you see this error:</p>
+      <p>Hold down the <strong>BOOT</strong> button on the board, and &mdash; while still
+      holding it &mdash; click <strong>Install</strong> (or retry the connection) in the
+      browser. Once you see progress (e.g. "Erasing" or "Writing"), you can release the
+      button.</p>
+      <p>If your board has no BOOT button, try unplugging and reconnecting it right before
+      you click Install/retry instead.</p>
+    </details>
+    <details>
       <summary>My computer doesn't see the device</summary>
       <p>Try a different USB cable &mdash; some cables are charge-only and can't carry data.
       Also try a different USB port directly on your computer rather than through a hub.</p>
     </details>
     <details>
       <summary>Will this erase my settings?</summary>
-      <p>Yes. Flashing writes the entire board, including saved preferences. Note down any
-      custom settings you want to restore afterward.</p>
+      <p>Not unless you check the <strong>"Erase device"</strong> box when prompted. Leave it
+      unchecked and the update only replaces the firmware &mdash; your saved songlist and
+      settings stay intact. Check it only if you want a full factory reset.</p>
     </details>
     <details>
       <summary>The flash failed partway through</summary>
