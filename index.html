@@ -267,12 +267,6 @@
       Also try a different USB port directly on your computer rather than through a hub.</p>
     </details>
     <details>
-      <summary>Will this erase my settings?</summary>
-      <p>Not unless you check the <strong>"Erase device"</strong> box when prompted. Leave it
-      unchecked and the update only replaces the firmware &mdash; your saved songlist and
-      settings stay intact. Check it only if you want a full factory reset.</p>
-    </details>
-    <details>
       <summary>The flash failed partway through</summary>
       <p>Unplug the board, plug it back in, and try again from the start. Don't disconnect the
       cable while a flash is in progress.</p>
@@ -330,7 +324,13 @@
       "which port disappears from the list, then plug it back in and pick that one."
     );
 
-    steps.push("Click <strong>Install</strong> and wait &mdash; don't unplug the board while it flashes.");
+    steps.push(
+      "Click <strong>Install</strong>. A dialog will ask if you want to " +
+      "<strong>erase the device</strong> &mdash; leave the checkbox <strong>unchecked</strong> " +
+      "and click <strong>Next</strong>. This keeps your saved settings and song list; only " +
+      "check it if you specifically want a full factory reset (it deletes everything)."
+    );
+    steps.push("Wait for it to flash &mdash; don't unplug the board while it's in progress.");
     steps.push("When it finishes, the board will restart on its own running the new firmware.");
 
     return steps.concat(device.notes || []);
