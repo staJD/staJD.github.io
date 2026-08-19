@@ -262,6 +262,20 @@
   <div class="faq">
     <h3>Questions</h3>
     <details>
+      <summary>Several ports show up &mdash; which one do I pick?</summary>
+      <p>The popup lists <strong>every</strong> serial port on your computer, not just this
+      board, so seeing more than one is normal. Pick the one that best matches your board:</p>
+      <p><strong>On Mac</strong>, look for a name containing <code>usbmodem</code> or
+      <code>USB JTAG/serial debug unit</code> &mdash; for example
+      <code>cu.usbmodem83101 USB JTAG/serial debug unit</code>. Ignore entries like
+      <code>Bluetooth-Incoming-Port</code> or <code>debug-console</code> &mdash; those aren't
+      your board.</p>
+      <p><strong>On Windows</strong>, ports just show up as <code>COM3</code>, <code>COM4</code>,
+      etc. with no descriptive name, so it's harder to tell them apart at a glance. If you're
+      unsure, unplug the board, reopen the popup to see which port disappears, then plug it
+      back in and pick that same one.</p>
+    </details>
+    <details>
       <summary>My computer doesn't see the device</summary>
       <p>Try a different USB cable &mdash; some cables are charge-only and can't carry data.
       Also try a different USB port directly on your computer rather than through a hub.</p>
@@ -304,7 +318,7 @@
     const steps = [
       "Plug the board into this computer with a " + device.cable + ".",
       "Click <strong>Connect &amp; Flash</strong> below.",
-      "Pick the board's serial port from the browser's popup, then click <strong>Connect</strong>.",
+      "A popup will list every port on your computer &mdash; pick the one for <em>this board</em> (see the FAQ below if you're not sure which), then click <strong>Connect</strong>.",
       "Click <strong>Install</strong> and wait &mdash; don't unplug the board while it flashes.",
       "When it finishes, the board will restart on its own running the new firmware."
     ];
