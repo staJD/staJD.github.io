@@ -337,13 +337,39 @@
   const soonSection = document.getElementById("soonSection");
 
   function stepsFor(device) {
-    const steps = [
-      "Plug the board into this computer with a " + device.cable + ".",
-      "Click <strong>Connect &amp; Flash</strong> below.",
-      "A popup will list every port on your computer &mdash; pick the one for <em>this board</em> (see the FAQ below if you're not sure which), then click <strong>Connect</strong>.",
-      "Click <strong>Install</strong> and wait &mdash; don't unplug the board while it flashes.",
-      "When it finishes, the board will restart on its own running the new firmware."
-    ];
+    const steps = [];
+
+    if (device.needsBootMode) {
+      steps.push(
+        "Press and hold the board's <strong>BOOT</strong> button, then plug in the " +
+        device.cable + " while still holding it."
+      );
+      steps.push(
+        "Wait for the screen to turn <strong>blank/black</strong> &mdash; that's the sign " +
+        "it worked and the board is in upload mode. If the normal display is still showing, " +
+        "it didn't work &mdash; try again. Once it's black, keep holding BOOT about 2 more " +
+        "seconds, then release it."
+      );
+    } else {
+      steps.push("Plug the board into this computer with a " + device.cable + ".");
+    }
+
+    steps.push("Click <strong>Connect &amp; Flash</strong> below.");
+
+    steps.push(
+      "A popup will list every port on your computer &mdash; pick the one for " +
+      "<em>this board</em>, then click <strong>Connect</strong>." +
+      "<br><strong>On Mac:</strong> look for a name containing <code>usbmodem</code> or " +
+      "<code>USB JTAG/serial debug unit</code>. Ignore <code>Bluetooth-Incoming-Port</code> " +
+      "or <code>debug-console</code> &mdash; those aren't your board." +
+      "<br><strong>On Windows:</strong> ports just show as <code>COM3</code>, <code>COM4</code>, " +
+      "etc. with no descriptive name. If you're not sure which one, unplug the board, check " +
+      "which port disappears from the list, then plug it back in and pick that one."
+    );
+
+    steps.push("Click <strong>Install</strong> and wait &mdash; don't unplug the board while it flashes.");
+    steps.push("When it finishes, the board will restart on its own running the new firmware.");
+
     return steps.concat(device.notes || []);
   }
 

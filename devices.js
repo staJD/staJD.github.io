@@ -10,6 +10,7 @@ window.STAJPILOT_DEVICES = [
     version: "v0.95",
     manifest: "manifests/guition-jc4880p4.json",
     cable: "USB-C cable, connected to the board's single USB port",
+    needsBootMode: true,
     notes: [],
     available: true
   },
