@@ -14,6 +14,26 @@ window.STAJPILOT_DEVICES = [
     available: true
   },
   {
+    id: "waveshare-s3-4.3",
+    name: "Waveshare ESP32-S3 4.3",
+    subtitle: "4.3\" ESP32-S3 touch display",
+    version: "coming soon",
+    manifest: null,
+    cable: "USB-C cable",
+    notes: [],
+    available: false
+  },
+  {
+    id: "waveshare-s3-2.0",
+    name: "Waveshare ESP32-S3 2.0",
+    subtitle: "2\" ESP32-S3 touch display",
+    version: "coming soon",
+    manifest: null,
+    cable: "USB-C cable",
+    notes: [],
+    available: false
+  },
+  {
     id: "ws-p4-5",
     name: "Waveshare WS-P4-5",
     subtitle: "5\" ESP32-P4 touch display",
