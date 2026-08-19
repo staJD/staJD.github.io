@@ -1,111 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StajPilot Firmware Flasher</title>
-  <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
-  <style>
-    :root {
-      --bg: #0b0d12;
-      --surface: #12151d;
-      --border: #232838;
-      --text: #e8ebf2;
-      --text-dim: #8891a5;
-      --accent: #4f8cff;
-      --accent-dim: #2a4a8a;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-    .card {
-      width: 100%;
-      max-width: 480px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 40px 32px;
-      text-align: center;
-    }
-    h1 {
-      font-size: 1.6rem;
-      margin: 0 0 4px;
-      letter-spacing: -0.01em;
-    }
-    .version {
-      color: var(--text-dim);
-      font-size: 0.9rem;
-      margin: 0 0 28px;
-    }
-    esp-web-install-button {
-      display: block;
-    }
-    esp-web-install-button button {
-      width: 100%;
-      padding: 14px 20px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 10px;
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      cursor: pointer;
-    }
-    esp-web-install-button button:hover {
-      background: #3f78e8;
-    }
-    .req {
-      margin-top: 20px;
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-    .req code {
-      background: var(--accent-dim);
-      color: var(--text);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 0.85em;
-    }
-    .unsupported {
-      display: none;
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 8px;
-      background: #3a1f1f;
-      color: #ffb4b4;
-      font-size: 0.85rem;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StajPilot Firmware Flasher</title>
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+<script src="devices.js"></script>
+<style>
+  :root {
+    --bg: #0c0d10;
+    --surface: #16181d;
+    --surface-2: #1e2127;
+    --border: #2a2d35;
+    --text: #eceef2;
+    --text-dim: #8a8f9c;
+    --text-faint: #5c6070;
+    --accent: #e8973a;
+    --accent-hover: #f5a94d;
+    --accent-text: #1a1408;
+    --ok: #4caf6b;
+    --warn: #d9863a;
+    --mono: "SF Mono", "Roboto Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    line-height: 1.5;
+    padding: 48px 20px 80px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 40px; }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .logo .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  header p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    margin: 8px 0 0;
+  }
+
+  .picker {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .device-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .device-btn:hover { border-color: #3a3e48; }
+  .device-btn.active {
+    border-color: var(--accent);
+    background: #201a10;
+  }
+  .device-btn.unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .device-btn .name { font-weight: 600; font-size: 0.95rem; }
+  .device-btn .sub { color: var(--text-dim); font-size: 0.8rem; margin-top: 2px; }
+  .device-btn .badge {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--surface-2);
+    color: var(--text-faint);
+  }
+  .device-btn.active .badge { background: var(--accent); color: var(--accent-text); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-header h2 { margin: 0; font-size: 1.15rem; }
+  .card-header .ver {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  .steps { padding: 24px 28px; }
+  .steps ol { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+  }
+  .steps li::before {
+    content: counter(step);
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .steps li span { padding-top: 2px; font-size: 0.92rem; }
+  .steps code {
+    font-family: var(--mono);
+    background: var(--surface-2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+
+  .flash-area { padding: 8px 28px 28px; }
+  esp-web-install-button { display: block; }
+  esp-web-install-button button {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  esp-web-install-button button:hover { background: var(--accent-hover); }
+  esp-web-install-button button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .soon-box {
+    padding: 28px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  .msg {
+    display: none;
+    margin: 0 28px 24px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .msg.warn { background: #2a1d10; color: #f0b169; border: 1px solid #4a3418; }
+
+  .faq {
+    margin-top: 32px;
+  }
+  .faq h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    margin: 0 0 14px;
+  }
+  details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  summary {
+    padding: 14px 18px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--text-faint); font-weight: 400; }
+  details[open] summary::after { content: "\2212"; }
+  details p {
+    margin: 0;
+    padding: 0 18px 16px;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--text-faint);
+    font-size: 0.8rem;
+  }
+  footer a { color: var(--text-dim); }
+</style>
 </head>
 <body>
-  <div class="card">
-    <h1>StajPilot</h1>
-    <p class="version">Firmware v0.95 &middot; ESP32-P4</p>
+<div class="wrap">
 
-    <esp-web-install-button manifest="manifest.json">
-      <button slot="activate">Connect &amp; Flash</button>
-      <span slot="unsupported" class="unsupported" style="display:block;">
-        Your browser doesn't support Web Serial. Please use Chrome or Edge on desktop.
-      </span>
-      <span slot="not-allowed" class="unsupported" style="display:block;">
-        This page must be served over HTTPS to flash.
-      </span>
-    </esp-web-install-button>
+  <header>
+    <div class="logo"><span class="dot"></span>StajPilot</div>
+    <p>Flash your controller straight from the browser &mdash; no software to install.</p>
+  </header>
 
-    <p class="req">
-      Connect the board via USB, click the button above, and pick its serial port.
-      Works in <code>Chrome</code> or <code>Edge</code> on desktop only.
-    </p>
+  <div class="picker" id="picker"></div>
+
+  <div class="card" id="card">
+    <div class="card-header">
+      <h2 id="deviceName">&nbsp;</h2>
+      <span class="ver" id="deviceVersion"></span>
+    </div>
+
+    <div id="readySection">
+      <div class="steps">
+        <ol id="stepList"></ol>
+      </div>
+      <div class="msg warn" id="warnUnsupported">
+        This browser can't flash over USB. Open this page in <strong>Chrome</strong> or
+        <strong>Edge</strong> on a desktop computer (phones and Safari aren't supported).
+      </div>
+      <div class="flash-area">
+        <esp-web-install-button id="installBtn">
+          <button slot="activate">Connect &amp; Flash</button>
+          <span slot="unsupported"></span>
+          <span slot="not-allowed"></span>
+        </esp-web-install-button>
+      </div>
+    </div>
+
+    <div class="soon-box" id="soonSection" style="display:none;">
+      Firmware for this board isn't published yet &mdash; check back soon.
+    </div>
   </div>
+
+  <div class="faq">
+    <h3>Questions</h3>
+    <details>
+      <summary>My computer doesn't see the device</summary>
+      <p>Try a different USB cable &mdash; some cables are charge-only and can't carry data.
+      Also try a different USB port directly on your computer rather than through a hub.</p>
+    </details>
+    <details>
+      <summary>Will this erase my settings?</summary>
+      <p>Yes. Flashing writes the entire board, including saved preferences. Note down any
+      custom settings you want to restore afterward.</p>
+    </details>
+    <details>
+      <summary>The flash failed partway through</summary>
+      <p>Unplug the board, plug it back in, and try again from the start. Don't disconnect the
+      cable while a flash is in progress.</p>
+    </details>
+    <details>
+      <summary>Is my data sent anywhere?</summary>
+      <p>No. Flashing happens directly between your browser and the board over USB &mdash; the
+      firmware file never leaves your computer except to download it from this page.</p>
+    </details>
+  </div>
+
+  <footer>
+    <a href="https://github.com/staJD" target="_blank" rel="noopener">github.com/staJD</a>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  const devices = window.STAJPILOT_DEVICES || [];
+  const picker = document.getElementById("picker");
+  const deviceName = document.getElementById("deviceName");
+  const deviceVersion = document.getElementById("deviceVersion");
+  const stepList = document.getElementById("stepList");
+  const installBtn = document.getElementById("installBtn");
+  const readySection = document.getElementById("readySection");
+  const soonSection = document.getElementById("soonSection");
+
+  function stepsFor(device) {
+    const steps = [
+      "Plug the board into this computer with a " + device.cable + ".",
+      "Click <strong>Connect &amp; Flash</strong> below.",
+      "Pick the board's serial port from the browser's popup, then click <strong>Connect</strong>.",
+      "Click <strong>Install</strong> and wait &mdash; don't unplug the board while it flashes.",
+      "When it finishes, the board will restart on its own running the new firmware."
+    ];
+    return steps.concat(device.notes || []);
+  }
+
+  function render(device) {
+    deviceName.textContent = device.name + (device.subtitle ? " — " + device.subtitle : "");
+    deviceVersion.textContent = device.version;
+
+    if (!device.available) {
+      readySection.style.display = "none";
+      soonSection.style.display = "block";
+      return;
+    }
+    readySection.style.display = "block";
+    soonSection.style.display = "none";
+
+    stepList.innerHTML = stepsFor(device).map(function (s) {
+      return "<li><span>" + s + "</span></li>";
+    }).join("");
+
+    installBtn.setAttribute("manifest", device.manifest);
+  }
+
+  function buildPicker() {
+    picker.innerHTML = "";
+    devices.forEach(function (device, i) {
+      const btn = document.createElement("button");
+      btn.className = "device-btn" + (i === 0 ? " active" : "") + (device.available ? "" : " unavailable");
+      btn.innerHTML =
+        '<div class="name">' + device.name + "</div>" +
+        '<div class="sub">' + device.subtitle + "</div>" +
+        '<div class="badge">' + (device.available ? device.version : "coming soon") + "</div>";
+      btn.addEventListener("click", function () {
+        if (!device.available) return;
+        picker.querySelectorAll(".device-btn").forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        render(device);
+      });
+      picker.appendChild(btn);
+    });
+  }
+
+  buildPicker();
+  if (devices.length) render(devices[0]);
+})();
+</script>
 </body>
 </html>
