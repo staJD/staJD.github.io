@@ -278,11 +278,21 @@
     <details>
       <summary>"Failed to initialize" / connecting doesn't work</summary>
       <p>Your board needs to be in <strong>upload mode</strong> before it will accept a flash,
-      and some boards don't enter it automatically from the browser. If you see this error:</p>
-      <p>Hold down the <strong>BOOT</strong> button on the board, and &mdash; while still
-      holding it &mdash; click <strong>Install</strong> (or retry the connection) in the
-      browser. Once you see progress (e.g. "Erasing" or "Writing"), you can release the
-      button.</p>
+      and some boards don't enter it automatically from the browser. If you see this error,
+      put it into upload mode manually:</p>
+      <ol style="margin:0 0 12px; padding-left:20px; color:var(--text-dim); font-size:0.88em;">
+        <li>Unplug the board's USB cable.</li>
+        <li>Press and hold the <strong>BOOT</strong> button &mdash; don't let go yet.</li>
+        <li>While still holding BOOT, plug the USB cable back in.</li>
+        <li>The screen should turn <strong>blank/black</strong> &mdash; that's your sign it
+        worked. A black screen means the board is in upload mode and ready to be flashed; if
+        the screen is still showing the normal display, it didn't enter upload mode and you
+        should try the steps again.</li>
+        <li>Keep holding BOOT for about 2 more seconds, then release it.</li>
+      </ol>
+      <p>With the screen black, click <strong>Connect &amp; Flash</strong> and continue as
+      normal &mdash; the board should be detected and stay in upload mode for the whole
+      install.</p>
       <p>If your board has no BOOT button, try unplugging and reconnecting it right before
       you click Install/retry instead.</p>
     </details>
