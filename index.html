@@ -262,41 +262,6 @@
   <div class="faq">
     <h3>Questions</h3>
     <details>
-      <summary>Several ports show up &mdash; which one do I pick?</summary>
-      <p>The popup lists <strong>every</strong> serial port on your computer, not just this
-      board, so seeing more than one is normal. Pick the one that best matches your board:</p>
-      <p><strong>On Mac</strong>, look for a name containing <code>usbmodem</code> or
-      <code>USB JTAG/serial debug unit</code> &mdash; for example
-      <code>cu.usbmodem83101 USB JTAG/serial debug unit</code>. Ignore entries like
-      <code>Bluetooth-Incoming-Port</code> or <code>debug-console</code> &mdash; those aren't
-      your board.</p>
-      <p><strong>On Windows</strong>, ports just show up as <code>COM3</code>, <code>COM4</code>,
-      etc. with no descriptive name, so it's harder to tell them apart at a glance. If you're
-      unsure, unplug the board, reopen the popup to see which port disappears, then plug it
-      back in and pick that same one.</p>
-    </details>
-    <details>
-      <summary>"Failed to initialize" / connecting doesn't work</summary>
-      <p>Your board needs to be in <strong>upload mode</strong> before it will accept a flash,
-      and some boards don't enter it automatically from the browser. If you see this error,
-      put it into upload mode manually:</p>
-      <ol style="margin:0 0 12px; padding-left:20px; color:var(--text-dim); font-size:0.88em;">
-        <li>Unplug the board's USB cable.</li>
-        <li>Press and hold the <strong>BOOT</strong> button &mdash; don't let go yet.</li>
-        <li>While still holding BOOT, plug the USB cable back in.</li>
-        <li>The screen should turn <strong>blank/black</strong> &mdash; that's your sign it
-        worked. A black screen means the board is in upload mode and ready to be flashed; if
-        the screen is still showing the normal display, it didn't enter upload mode and you
-        should try the steps again.</li>
-        <li>Keep holding BOOT for about 2 more seconds, then release it.</li>
-      </ol>
-      <p>With the screen black, click <strong>Connect &amp; Flash</strong> and continue as
-      normal &mdash; the board should be detected and stay in upload mode for the whole
-      install.</p>
-      <p>If your board has no BOOT button, try unplugging and reconnecting it right before
-      you click Install/retry instead.</p>
-    </details>
-    <details>
       <summary>My computer doesn't see the device</summary>
       <p>Try a different USB cable &mdash; some cables are charge-only and can't carry data.
       Also try a different USB port directly on your computer rather than through a hub.</p>
