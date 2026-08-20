@@ -222,6 +222,37 @@
   }
   .msg.warn { background: #2a1d10; color: #f0b169; border: 1px solid #4a3418; }
 
+  .donate {
+    margin-top: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    text-align: center;
+  }
+  .donate h3 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+  }
+  .donate p {
+    margin: 0 0 18px;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .donate a.btn {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--accent-text);
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    transition: background 0.15s;
+  }
+  .donate a.btn:hover { background: var(--accent-hover); }
+
   .faq {
     margin-top: 32px;
   }
@@ -305,6 +336,12 @@
     <div class="soon-box" id="soonSection" style="display:none;"></div>
   </div>
 
+  <div class="donate">
+    <h3 id="donateHeading"></h3>
+    <p id="donateText"></p>
+    <a class="btn" id="donateBtn" href="https://ko-fi.com/stajd" target="_blank" rel="noopener"></a>
+  </div>
+
   <div class="faq">
     <h3 id="faqHeading"></h3>
     <div id="faqList"></div>
@@ -312,8 +349,6 @@
 
   <footer>
     <a href="https://github.com/staJD" target="_blank" rel="noopener">github.com/staJD</a>
-    <span aria-hidden="true"> &middot; </span>
-    <a href="https://ko-fi.com/stajd" target="_blank" rel="noopener">Support on Ko-fi</a>
   </footer>
 
 </div>
@@ -333,6 +368,12 @@
         buttons: "BOOT / RESET buttons",
         ports: "PC vs Kemper ports"
       },
+      donateHeading: "Support StajPilot",
+      donateText:
+        "Built and maintained in spare time — more board support and new devices " +
+        "(a footswitch controller, a desktop controller) are in the works. If StajPilot's " +
+        "been useful to you, a coffee helps keep it moving.",
+      donateBtn: "Support on Ko-fi",
       faqHeading: "Questions",
       faq: [
         {
@@ -407,6 +448,12 @@
         buttons: "BOOT / RESET 버튼",
         ports: "PC용 포트 vs 캠퍼용 포트"
       },
+      donateHeading: "StajPilot 후원하기",
+      donateText:
+        "여가 시간에 만들고 관리하고 있어요 — 다른 보드 지원과 새 기기(풋스위치 " +
+        "컨트롤러, 데스크톱 컨트롤러)도 준비 중입니다. StajPilot이 도움이 되셨다면, " +
+        "커피 한 잔이 계속 만들어나가는 데 큰 힘이 됩니다.",
+      donateBtn: "Ko-fi에서 후원하기",
       faqHeading: "자주 묻는 질문",
       faq: [
         {
@@ -486,6 +533,9 @@
   const faqHeading = document.getElementById("faqHeading");
   const faqList = document.getElementById("faqList");
   const langToggle = document.getElementById("langToggle");
+  const donateHeading = document.getElementById("donateHeading");
+  const donateText = document.getElementById("donateText");
+  const donateBtn = document.getElementById("donateBtn");
 
   let currentLang = localStorage.getItem("stajpilot-lang");
   if (currentLang !== "en" && currentLang !== "ko") {
@@ -535,6 +585,9 @@
     faqList.innerHTML = t().faq.map(function (item) {
       return "<details><summary>" + item.q + "</summary><p>" + item.a + "</p></details>";
     }).join("");
+    donateHeading.textContent = t().donateHeading;
+    donateText.textContent = t().donateText;
+    donateBtn.textContent = t().donateBtn;
     langToggle.querySelectorAll("button").forEach(function (b) {
       b.classList.toggle("active", b.getAttribute("data-lang") === currentLang);
     });
