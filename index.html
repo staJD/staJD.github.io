@@ -383,7 +383,16 @@
           "<strong>unchecked</strong> to keep your saved settings and song list. " +
           "Then click <strong>Next</strong>.",
         waitFlash: "Wait for it to flash — don't unplug the board while it's in progress.",
-        restart: "When it finishes, the board will restart on its own running the new firmware."
+        installComplete:
+          "When you see <strong>\"Installation complete!\"</strong>, close the popup with the " +
+          "<strong>X</strong> in the corner. If a menu with <strong>\"Install...\"</strong> and " +
+          "<strong>\"Logs &amp; Console\"</strong> shows up first, that's just the tool's normal " +
+          "menu (it looks the same before and after installing) — you don't need to click " +
+          "either one, just close it with X.",
+        restart:
+          "The board doesn't restart on its own — unplug the cable from the <strong>top " +
+          "(PC)</strong> port, then connect the <strong>bottom (Kemper)</strong> port to your " +
+          "Kemper as normal. That boots it into the new firmware."
       }
     },
     ko: {
@@ -449,7 +458,15 @@
           "<strong>체크하지 않은 상태</strong>로 두세요 — 그래야 저장된 설정과 곡 " +
           "목록이 유지됩니다. 그다음 <strong>Next</strong>를 클릭하세요.",
         waitFlash: "플래싱이 끝날 때까지 기다리세요 — 진행 중에는 보드를 뽑지 마세요.",
-        restart: "완료되면 보드가 자동으로 재시작되며 새 펌웨어로 실행됩니다."
+        installComplete:
+          "<strong>\"Installation complete!\"</strong>가 뜨면 모서리의 <strong>X</strong>로 팝업을 " +
+          "닫으세요. 혹시 <strong>\"Install...\"</strong>과 <strong>\"Logs &amp; Console\"</strong>이 " +
+          "있는 메뉴가 먼저 뜨더라도, 그건 그냥 이 도구의 기본 메뉴예요(설치 전이나 후나 " +
+          "똑같이 생겼습니다) — 아무것도 누를 필요 없이 X로 닫으시면 됩니다.",
+        restart:
+          "보드는 저절로 재시작되지 않습니다 — <strong>위쪽(PC)</strong> 포트에서 케이블을 " +
+          "뽑고, <strong>아래쪽(캠퍼)</strong> 포트를 평소처럼 캠퍼에 연결하세요. 그러면 " +
+          "새 펌웨어로 부팅됩니다."
       }
     }
   };
@@ -502,6 +519,7 @@
     steps.push(s.portPick);
     steps.push(s.eraseDialog);
     steps.push(s.waitFlash);
+    steps.push(s.installComplete);
     steps.push(s.restart);
 
     return steps.concat(device.notes || []);
