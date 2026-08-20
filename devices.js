@@ -35,12 +35,12 @@ window.STAJPILOT_DEVICES = [
     available: false
   },
   {
-    id: "ws-p4-5",
-    name: "Waveshare WS-P4-5",
-    subtitle: "5\" ESP32-P4 touch display",
+    id: "guition-jc3248w535c",
+    name: "Guition JC3248W535C",
+    subtitle: "3.5\" ESP32-S3 touch display",
     version: "coming soon",
     manifest: null,
-    cable: "USB-C cable, connected to the board's UART/flash port",
+    cable: "USB-C cable",
     notes: [],
     available: false
   }
