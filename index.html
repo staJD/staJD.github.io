@@ -440,11 +440,12 @@
   function stepsFor(device) {
     const s = t().steps;
     const steps = [];
+    const cable = (currentLang === "ko" && device.cableKo) ? device.cableKo : device.cable;
 
     if (device.needsBootMode) {
-      steps.push(s.bootMode(device.cable));
+      steps.push(s.bootMode(cable));
     } else {
-      steps.push(s.plugIn(device.cable));
+      steps.push(s.plugIn(cable));
     }
 
     steps.push(s.connectFlash);
