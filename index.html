@@ -252,6 +252,12 @@
     transition: background 0.15s;
   }
   .donate a.btn:hover { background: var(--accent-hover); }
+  .donate-about {
+    margin: 14px 0 0 !important;
+    color: var(--text-faint) !important;
+    font-size: 0.75rem !important;
+    line-height: 1.5;
+  }
 
   .faq {
     margin-top: 32px;
@@ -340,6 +346,7 @@
     <h3 id="donateHeading"></h3>
     <p id="donateText"></p>
     <a class="btn" id="donateBtn" href="https://ko-fi.com/stajd" target="_blank" rel="noopener"></a>
+    <p id="donateAbout" class="donate-about"></p>
   </div>
 
   <div class="faq">
@@ -373,7 +380,10 @@
         "Keeping up with Kemper updates, building new boards, adding fun features — " +
         "StajPilot needs continued work to keep growing. Support is what drives that " +
         "forward. I'll keep taking on creative projects that musicians actually need.",
-      donateBtn: "Support on Ko-fi",
+      donateBtn: "☕ Support on Ko-fi",
+      donateAbout:
+        "Ko-fi is a well-known creator-support platform, around since 2011 — no account " +
+        "needed, just a card, and it's completely separate from installing/using StajPilot.",
       faqHeading: "Questions",
       faq: [
         {
@@ -451,9 +461,13 @@
       donateHeading: "StajPilot 후원하기",
       donateText:
         "캠퍼 업데이트 대응, 신규 보드 개발, 재미있는 기능 추가까지 — StajPilot이 " +
-        "계속 발전하려면 꾸준한 관리가 필요해요. 후원은 그 원동력이 됩니다. " +
+        "계속 발전하려면 꾸준한 관리가 필요합니다. 후원은 그 원동력이 됩니다. " +
         "앞으로도 음악인들에게 필요한 창의적인 프로젝트에 계속 도전해보겠습니다.",
-      donateBtn: "Ko-fi에서 후원하기",
+      donateBtn: "☕ Ko-fi에서 후원하기",
+      donateAbout:
+        "Ko-fi는 2011년부터 있어온 잘 알려진 크리에이터 후원 플랫폼이에요 — 별도 " +
+        "계정 없이 카드만으로 후원할 수 있고, StajPilot 설치·사용과는 완전히 " +
+        "별개입니다.",
       faqHeading: "자주 묻는 질문",
       faq: [
         {
@@ -535,6 +549,7 @@
   const donateHeading = document.getElementById("donateHeading");
   const donateText = document.getElementById("donateText");
   const donateBtn = document.getElementById("donateBtn");
+  const donateAbout = document.getElementById("donateAbout");
 
   let currentLang = localStorage.getItem("stajpilot-lang");
   if (currentLang !== "en" && currentLang !== "ko") {
@@ -587,6 +602,7 @@
     donateHeading.textContent = t().donateHeading;
     donateText.textContent = t().donateText;
     donateBtn.textContent = t().donateBtn;
+    donateAbout.textContent = t().donateAbout;
     langToggle.querySelectorAll("button").forEach(function (b) {
       b.classList.toggle("active", b.getAttribute("data-lang") === currentLang);
     });
