@@ -49,6 +49,29 @@
     margin: 8px 0 0;
   }
 
+  .lang-toggle {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+  .lang-toggle button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .lang-toggle button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+
   .picker {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -224,9 +247,14 @@
 <body>
 <div class="wrap">
 
+  <div class="lang-toggle" id="langToggle">
+    <button type="button" data-lang="en">EN</button>
+    <button type="button" data-lang="ko">한국어</button>
+  </div>
+
   <header>
     <div class="logo"><span class="dot"></span>StajPilot</div>
-    <p>Flash your controller straight from the browser &mdash; no software to install.</p>
+    <p id="headerSubtitle"></p>
   </header>
 
   <div class="picker" id="picker"></div>
@@ -241,41 +269,22 @@
       <div class="steps">
         <ol id="stepList"></ol>
       </div>
-      <div class="msg warn" id="warnUnsupported">
-        This browser can't flash over USB. Open this page in <strong>Chrome</strong> or
-        <strong>Edge</strong> on a desktop computer (phones and Safari aren't supported).
-      </div>
+      <div class="msg warn" id="warnUnsupported"></div>
       <div class="flash-area">
         <esp-web-install-button id="installBtn">
-          <button slot="activate">Connect &amp; Flash</button>
+          <button slot="activate" id="installBtnLabel">Connect &amp; Flash</button>
           <span slot="unsupported"></span>
           <span slot="not-allowed"></span>
         </esp-web-install-button>
       </div>
     </div>
 
-    <div class="soon-box" id="soonSection" style="display:none;">
-      Firmware for this board isn't published yet &mdash; check back soon.
-    </div>
+    <div class="soon-box" id="soonSection" style="display:none;"></div>
   </div>
 
   <div class="faq">
-    <h3>Questions</h3>
-    <details>
-      <summary>My computer doesn't see the device</summary>
-      <p>Try a different USB cable &mdash; some cables are charge-only and can't carry data.
-      Also try a different USB port directly on your computer rather than through a hub.</p>
-    </details>
-    <details>
-      <summary>The flash failed partway through</summary>
-      <p>Unplug the board, plug it back in, and try again from the start. Don't disconnect the
-      cable while a flash is in progress.</p>
-    </details>
-    <details>
-      <summary>Is my data sent anywhere?</summary>
-      <p>No. Flashing happens directly between your browser and the board over USB &mdash; the
-      firmware file never leaves your computer except to download it from this page.</p>
-    </details>
+    <h3 id="faqHeading"></h3>
+    <div id="faqList"></div>
   </div>
 
   <footer>
@@ -288,63 +297,188 @@
 
 <script>
 (function () {
+  const STRINGS = {
+    en: {
+      subtitle: "Flash your controller straight from the browser — no software to install.",
+      comingSoonBadge: "coming soon",
+      comingSoonBox: "Firmware for this board isn't published yet — check back soon.",
+      installBtnLabel: "Connect &amp; Flash",
+      unsupportedWarning:
+        "This browser can't flash over USB. Open this page in <strong>Chrome</strong> or " +
+        "<strong>Edge</strong> on a desktop computer (phones and Safari aren't supported).",
+      faqHeading: "Questions",
+      faq: [
+        {
+          q: "My computer doesn't see the device",
+          a: "Try a different USB cable — some cables are charge-only and can't carry data. " +
+             "Also try a different USB port directly on your computer rather than through a hub."
+        },
+        {
+          q: "The flash failed partway through",
+          a: "Unplug the board, plug it back in, and try again from the start. Don't disconnect " +
+             "the cable while a flash is in progress."
+        },
+        {
+          q: "Is my data sent anywhere?",
+          a: "No. Flashing happens directly between your browser and the board over USB — " +
+             "the firmware file never leaves your computer except to download it from this page."
+        }
+      ],
+      steps: {
+        bootMode: function (cable) {
+          return "Press and hold the board's <strong>BOOT</strong> button. While still holding it, " +
+            "plug in the " + cable + ". Watch the screen: it should turn " +
+            "<strong>blank/black</strong> — that's the sign it worked and the board is in " +
+            "upload mode (if the normal display is still showing, it didn't work — try " +
+            "again). Once it's black, keep holding BOOT about 2 more seconds, <strong>then " +
+            "release it</strong>.";
+        },
+        plugIn: function (cable) {
+          return "Plug the board into this computer with a " + cable + ".";
+        },
+        connectFlash: "Click <strong>Connect &amp; Flash</strong> below.",
+        portPick:
+          "A popup will list every port on your computer — pick the one for " +
+          "<em>this board</em>, then click <strong>Connect</strong>." +
+          "<br><strong>On Mac:</strong> look for a name containing <code>usbmodem</code> or " +
+          "<code>USB JTAG/serial debug unit</code>. Ignore <code>Bluetooth-Incoming-Port</code> " +
+          "or <code>debug-console</code> — those aren't your board." +
+          "<br><strong>On Windows:</strong> ports just show as <code>COM3</code>, <code>COM4</code>, " +
+          "etc. with no descriptive name. If you're not sure which one, unplug the board, check " +
+          "which port disappears from the list, then plug it back in and pick that one.",
+        eraseDialog:
+          "Click <strong>Install</strong>. A dialog will ask if you want to " +
+          "<strong>erase the device</strong> — leave the checkbox <strong>unchecked</strong> " +
+          "and click <strong>Next</strong>. This keeps your saved settings and song list; only " +
+          "check it if you specifically want a full factory reset (it deletes everything).",
+        waitFlash: "Wait for it to flash — don't unplug the board while it's in progress.",
+        restart: "When it finishes, the board will restart on its own running the new firmware."
+      }
+    },
+    ko: {
+      subtitle: "브라우저에서 바로 컨트롤러에 펌웨어를 설치하세요 — 별도 소프트웨어 필요 없음.",
+      comingSoonBadge: "출시 예정",
+      comingSoonBox: "이 보드용 펌웨어는 아직 공개되지 않았습니다 — 나중에 다시 확인해주세요.",
+      installBtnLabel: "연결 &amp; 플래시",
+      unsupportedWarning:
+        "이 브라우저는 USB로 플래싱할 수 없습니다. 데스크톱 컴퓨터의 <strong>Chrome</strong> 또는 " +
+        "<strong>Edge</strong>에서 이 페이지를 열어주세요 (휴대폰과 Safari는 지원되지 않습니다).",
+      faqHeading: "자주 묻는 질문",
+      faq: [
+        {
+          q: "컴퓨터가 기기를 인식하지 못해요",
+          a: "다른 USB 케이블을 시도해보세요 — 일부 케이블은 충전 전용이라 데이터 전송이 안됩니다. " +
+             "허브를 거치지 말고 컴퓨터의 다른 USB 포트에 직접 연결해보세요."
+        },
+        {
+          q: "플래싱이 중간에 실패했어요",
+          a: "보드를 뽑았다가 다시 꽂고 처음부터 다시 시도하세요. 플래싱이 진행 중일 때는 " +
+             "케이블을 뽑지 마세요."
+        },
+        {
+          q: "제 데이터가 어디로든 전송되나요?",
+          a: "아니요. 플래싱은 브라우저와 보드 사이에서 USB로 직접 이루어집니다 — " +
+             "펌웨어 파일은 이 페이지에서 다운로드되는 것 외에는 컴퓨터 밖으로 나가지 않습니다."
+        }
+      ],
+      steps: {
+        bootMode: function (cable) {
+          return "보드의 <strong>BOOT</strong> 버튼을 누른 채로 유지하세요. 누른 상태에서 " +
+            cable + "을(를) 연결하세요. 화면을 확인하세요: " +
+            "<strong>까맣게(빈 화면)</strong> 바뀌어야 합니다 — 이게 성공했다는 신호이고 " +
+            "보드가 업로드 모드에 들어간 것입니다 (평소 화면이 그대로 보인다면 " +
+            "실패한 것이니 다시 시도하세요). 화면이 까매지면 BOOT 버튼을 2초 " +
+            "정도 더 누르고 있다가 <strong>그다음에 손을 떼세요</strong>.";
+        },
+        plugIn: function (cable) {
+          return cable + "로 보드를 이 컴퓨터에 연결하세요.";
+        },
+        connectFlash: "아래 <strong>연결 &amp; 플래시</strong> 버튼을 클릭하세요.",
+        portPick:
+          "팝업창에 컴퓨터의 모든 포트가 나열됩니다 — <em>이 보드</em>에 해당하는 " +
+          "포트를 선택하고 <strong>Connect</strong>를 클릭하세요." +
+          "<br><strong>Mac에서는:</strong> <code>usbmodem</code>이나 <code>USB JTAG/serial debug unit</code>이 포함된 " +
+          "이름을 찾으세요. <code>Bluetooth-Incoming-Port</code>나 <code>debug-console</code>은 무시하세요 — " +
+          "보드가 아닙니다." +
+          "<br><strong>Windows에서는:</strong> 포트가 설명 없이 그냥 <code>COM3</code>, <code>COM4</code> 등으로 " +
+          "표시됩니다. 어떤 것인지 확실하지 않다면, 보드를 뽑아서 목록에서 " +
+          "사라지는 포트를 확인한 다음, 다시 꽂고 그 포트를 선택하세요.",
+        eraseDialog:
+          "<strong>Install</strong>을 클릭하세요. 기기를 <strong>지울지(erase)</strong> 묻는 창이 " +
+          "뜹니다 — 체크박스는 <strong>체크하지 않은 상태</strong>로 두고 <strong>Next</strong>를 " +
+          "클릭하세요. 이렇게 하면 저장된 설정과 곡 목록이 유지됩니다; 완전 " +
+          "초기화를 원할 때만 체크하세요 (모든 데이터가 삭제됩니다).",
+        waitFlash: "플래싱이 끝날 때까지 기다리세요 — 진행 중에는 보드를 뽑지 마세요.",
+        restart: "완료되면 보드가 자동으로 재시작되며 새 펌웨어로 실행됩니다."
+      }
+    }
+  };
+
   const devices = window.STAJPILOT_DEVICES || [];
   const picker = document.getElementById("picker");
   const deviceName = document.getElementById("deviceName");
   const deviceVersion = document.getElementById("deviceVersion");
   const stepList = document.getElementById("stepList");
   const installBtn = document.getElementById("installBtn");
+  const installBtnLabel = document.getElementById("installBtnLabel");
   const readySection = document.getElementById("readySection");
   const soonSection = document.getElementById("soonSection");
+  const headerSubtitle = document.getElementById("headerSubtitle");
+  const warnUnsupported = document.getElementById("warnUnsupported");
+  const faqHeading = document.getElementById("faqHeading");
+  const faqList = document.getElementById("faqList");
+  const langToggle = document.getElementById("langToggle");
+
+  let currentLang = localStorage.getItem("stajpilot-lang");
+  if (currentLang !== "en" && currentLang !== "ko") {
+    currentLang = (navigator.language || "").toLowerCase().indexOf("ko") === 0 ? "ko" : "en";
+  }
+  let activeDevice = null;
+
+  function t() { return STRINGS[currentLang]; }
 
   function stepsFor(device) {
+    const s = t().steps;
     const steps = [];
 
     if (device.needsBootMode) {
-      steps.push(
-        "Press and hold the board's <strong>BOOT</strong> button. While still holding it, " +
-        "plug in the " + device.cable + ". Watch the screen: it should turn " +
-        "<strong>blank/black</strong> &mdash; that's the sign it worked and the board is in " +
-        "upload mode (if the normal display is still showing, it didn't work &mdash; try " +
-        "again). Once it's black, keep holding BOOT about 2 more seconds, <strong>then " +
-        "release it</strong>."
-      );
+      steps.push(s.bootMode(device.cable));
     } else {
-      steps.push("Plug the board into this computer with a " + device.cable + ".");
+      steps.push(s.plugIn(device.cable));
     }
 
-    steps.push("Click <strong>Connect &amp; Flash</strong> below.");
-
-    steps.push(
-      "A popup will list every port on your computer &mdash; pick the one for " +
-      "<em>this board</em>, then click <strong>Connect</strong>." +
-      "<br><strong>On Mac:</strong> look for a name containing <code>usbmodem</code> or " +
-      "<code>USB JTAG/serial debug unit</code>. Ignore <code>Bluetooth-Incoming-Port</code> " +
-      "or <code>debug-console</code> &mdash; those aren't your board." +
-      "<br><strong>On Windows:</strong> ports just show as <code>COM3</code>, <code>COM4</code>, " +
-      "etc. with no descriptive name. If you're not sure which one, unplug the board, check " +
-      "which port disappears from the list, then plug it back in and pick that one."
-    );
-
-    steps.push(
-      "Click <strong>Install</strong>. A dialog will ask if you want to " +
-      "<strong>erase the device</strong> &mdash; leave the checkbox <strong>unchecked</strong> " +
-      "and click <strong>Next</strong>. This keeps your saved settings and song list; only " +
-      "check it if you specifically want a full factory reset (it deletes everything)."
-    );
-    steps.push("Wait for it to flash &mdash; don't unplug the board while it's in progress.");
-    steps.push("When it finishes, the board will restart on its own running the new firmware.");
+    steps.push(s.connectFlash);
+    steps.push(s.portPick);
+    steps.push(s.eraseDialog);
+    steps.push(s.waitFlash);
+    steps.push(s.restart);
 
     return steps.concat(device.notes || []);
   }
 
+  function renderStatic() {
+    document.documentElement.lang = currentLang;
+    headerSubtitle.innerHTML = t().subtitle;
+    installBtnLabel.innerHTML = t().installBtnLabel;
+    warnUnsupported.innerHTML = t().unsupportedWarning;
+    faqHeading.textContent = t().faqHeading;
+    faqList.innerHTML = t().faq.map(function (item) {
+      return "<details><summary>" + item.q + "</summary><p>" + item.a + "</p></details>";
+    }).join("");
+    langToggle.querySelectorAll("button").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-lang") === currentLang);
+    });
+  }
+
   function render(device) {
+    activeDevice = device;
     deviceName.textContent = device.name + (device.subtitle ? " — " + device.subtitle : "");
-    deviceVersion.textContent = device.version;
+    deviceVersion.textContent = device.available ? device.version : t().comingSoonBadge;
 
     if (!device.available) {
       readySection.style.display = "none";
       soonSection.style.display = "block";
+      soonSection.textContent = t().comingSoonBox;
       return;
     }
     readySection.style.display = "block";
@@ -365,7 +499,7 @@
       btn.innerHTML =
         '<div class="name">' + device.name + "</div>" +
         '<div class="sub">' + device.subtitle + "</div>" +
-        '<div class="badge">' + (device.available ? device.version : "coming soon") + "</div>";
+        '<div class="badge">' + (device.available ? device.version : t().comingSoonBadge) + "</div>";
       btn.addEventListener("click", function () {
         if (!device.available) return;
         picker.querySelectorAll(".device-btn").forEach(function (b) { b.classList.remove("active"); });
@@ -376,8 +510,21 @@
     });
   }
 
-  buildPicker();
-  if (devices.length) render(devices[0]);
+  function renderAll() {
+    renderStatic();
+    buildPicker();
+    render(activeDevice || devices[0]);
+  }
+
+  langToggle.querySelectorAll("button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      currentLang = b.getAttribute("data-lang");
+      localStorage.setItem("stajpilot-lang", currentLang);
+      renderAll();
+    });
+  });
+
+  if (devices.length) renderAll();
 })();
 </script>
 </body>
