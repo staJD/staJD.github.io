@@ -340,9 +340,10 @@
         portPick:
           "A popup will list every port on your computer — pick the one for " +
           "<em>this board</em>, then click <strong>Connect</strong>." +
-          "<br><strong>On Mac:</strong> look for a name containing <code>usbmodem</code> or " +
-          "<code>USB JTAG/serial debug unit</code>. Ignore <code>Bluetooth-Incoming-Port</code> " +
-          "or <code>debug-console</code> — those aren't your board." +
+          "<br><strong>On Mac:</strong> look for a single entry whose name includes both " +
+          "<code>usbmodem</code> and <code>USB JTAG/serial debug unit</code> together, like " +
+          "<code>cu.usbmodem83101 USB JTAG/serial debug unit</code>. Ignore " +
+          "<code>Bluetooth-Incoming-Port</code> or <code>debug-console</code> — those aren't your board." +
           "<br><strong>On Windows:</strong> ports just show as <code>COM3</code>, <code>COM4</code>, " +
           "etc. with no descriptive name. If you're not sure which one, unplug the board, check " +
           "which port disappears from the list, then plug it back in and pick that one.",
@@ -397,8 +398,10 @@
         portPick:
           "팝업창에 컴퓨터의 모든 포트가 나열됩니다 — <em>이 보드</em>에 해당하는 " +
           "포트를 선택하고 <strong>Connect</strong>를 클릭하세요." +
-          "<br><strong>Mac에서는:</strong> <code>usbmodem</code>이나 <code>USB JTAG/serial debug unit</code>이 포함된 " +
-          "이름을 찾으세요. <code>Bluetooth-Incoming-Port</code>나 <code>debug-console</code>은 무시하세요 — " +
+          "<br><strong>Mac에서는:</strong> <code>usbmodem</code>과 <code>USB JTAG/serial debug unit</code>이 " +
+          "함께 포함된 항목 하나를 찾으세요 — 예를 들면 " +
+          "<code>cu.usbmodem83101 USB JTAG/serial debug unit</code> 이렇게요. " +
+          "<code>Bluetooth-Incoming-Port</code>나 <code>debug-console</code>은 무시하세요 — " +
           "보드가 아닙니다." +
           "<br><strong>Windows에서는:</strong> 포트가 설명 없이 그냥 <code>COM3</code>, <code>COM4</code> 등으로 " +
           "표시됩니다. 어떤 것인지 확실하지 않다면, 보드를 뽑아서 목록에서 " +
