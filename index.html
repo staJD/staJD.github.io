@@ -164,6 +164,29 @@
     border-radius: 4px;
     font-size: 0.88em;
   }
+  .step-images {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .step-images figure {
+    margin: 0;
+    flex: 1 1 140px;
+    max-width: 220px;
+  }
+  .step-images img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .step-images figcaption {
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    text-align: center;
+    margin-top: 4px;
+  }
 
   .flash-area { padding: 8px 28px 28px; }
   esp-web-install-button { display: block; }
@@ -306,6 +329,10 @@
       unsupportedWarning:
         "This browser can't flash over USB. Open this page in <strong>Chrome</strong> or " +
         "<strong>Edge</strong> on a desktop computer (phones and Safari aren't supported).",
+      imageCaptions: {
+        buttons: "BOOT / RESET buttons",
+        ports: "PC vs Kemper ports"
+      },
       faqHeading: "Questions",
       faq: [
         {
@@ -364,6 +391,10 @@
       unsupportedWarning:
         "이 브라우저는 USB로 플래싱할 수 없습니다. 데스크톱 컴퓨터의 <strong>Chrome</strong> 또는 " +
         "<strong>Edge</strong>에서 이 페이지를 열어주세요 (휴대폰과 Safari는 지원되지 않습니다).",
+      imageCaptions: {
+        buttons: "BOOT / RESET 버튼",
+        ports: "PC용 포트 vs 캠퍼용 포트"
+      },
       faqHeading: "자주 묻는 질문",
       faq: [
         {
@@ -440,15 +471,25 @@
 
   function t() { return STRINGS[currentLang]; }
 
+  function imageBlockFor(device) {
+    if (!device.images) return "";
+    const cap = t().imageCaptions || {};
+    const figs = Object.keys(device.images).map(function (key) {
+      return '<figure><img src="' + device.images[key] + '" alt="' + (cap[key] || key) + '">' +
+        '<figcaption>' + (cap[key] || key) + '</figcaption></figure>';
+    }).join("");
+    return '<div class="step-images">' + figs + '</div>';
+  }
+
   function stepsFor(device) {
     const s = t().steps;
     const steps = [];
     const cable = (currentLang === "ko" && device.cableKo) ? device.cableKo : device.cable;
 
     if (device.needsBootMode) {
-      steps.push(s.bootMode(cable));
+      steps.push(s.bootMode(cable) + imageBlockFor(device));
     } else {
-      steps.push(s.plugIn(cable));
+      steps.push(s.plugIn(cable) + imageBlockFor(device));
     }
 
     steps.push(s.connectFlash);
