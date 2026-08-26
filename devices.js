@@ -20,6 +20,24 @@ window.STAJPILOT_DEVICES = [
     available: true
   },
   {
+    id: "guition-jc4880p4-beta",
+    name: "Guition JC4880P4 (BETA)",
+    subtitle: "4.3\" ESP32-P4 touch display — USB Host mode, less-tested",
+    version: "v0.96.00-beta",
+    manifest: "manifests/guition-jc4880p4-beta.json",
+    cable: "USB-C cable, connected to the <strong>top</strong> USB-C port (labeled PC in the photo below) — not the bottom port, which is for the Kemper connection",
+    cableKo: "USB-C 케이블 (아래 사진에서 PC라고 표시된 <strong>위쪽</strong> 포트에 연결 — 아래쪽 포트는 캠퍼 연결용입니다)",
+    needsBootMode: true,
+    images: {
+      buttons: "images/guition-jc4880p4/buttons.jpg",
+      ports: "images/guition-jc4880p4/ports.jpg"
+    },
+    notes: [
+      "Beta build - adds USB Host mode (new territory) alongside the existing Device mode. If you don't need USB Host mode, the stable release above is the safer pick."
+    ],
+    available: true
+  },
+  {
     id: "waveshare-s3-4.3",
     name: "Waveshare ESP32-S3 4.3",
     subtitle: "4.3\" ESP32-S3 touch display",
