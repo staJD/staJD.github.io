@@ -406,12 +406,14 @@
       ],
       steps: {
         bootMode: function (cable) {
-          return "Press and hold the board's <strong>BOOT</strong> button. While still holding it, " +
-            "plug in the " + cable + ". Watch the screen: it should turn " +
-            "<strong>blank/black</strong> — that's the sign it worked and the board is in " +
-            "upload mode (if the normal display is still showing, it didn't work — try " +
-            "again). Once it's black, keep holding BOOT about 2 more seconds, <strong>then " +
-            "release it</strong>.";
+          return "Press and hold the board's <strong>BOOT</strong> button first, then, while " +
+            "still holding it, plug in the " + cable + " into the <strong>top</strong> USB-C " +
+            "port (labeled PC in the photo below — not the bottom port, which is for the " +
+            "Kemper connection). Keep holding BOOT for about 2 more seconds, <strong>then " +
+            "release it</strong>. If the screen is still <strong>blank/black 5 seconds " +
+            "later</strong>, that's the sign it worked and the board is in upload mode. " +
+            "(Sometimes the normal display takes a couple seconds to reappear after you let " +
+            "go — if it comes back within those 5 seconds, it didn't work; try again.)";
         },
         plugIn: function (cable) {
           return "Plug the board into this computer with a " + cable + ".";
@@ -494,12 +496,13 @@
       ],
       steps: {
         bootMode: function (cable) {
-          return "보드의 <strong>BOOT</strong> 버튼을 누른 채로 유지하세요. 누른 상태에서 " +
-            cable + "을(를) 연결하세요. 화면을 확인하세요: " +
-            "<strong>까맣게(빈 화면)</strong> 바뀌어야 합니다 — 이게 성공했다는 신호이고 " +
-            "보드가 업로드 모드에 들어간 것입니다 (평소 화면이 그대로 보인다면 " +
-            "실패한 것이니 다시 시도하세요). 화면이 까매지면 BOOT 버튼을 2초 " +
-            "정도 더 누르고 있다가 <strong>그다음에 손을 떼세요</strong>.";
+          return "보드의 <strong>BOOT</strong> 버튼을 먼저 누르고, 누른 상태에서 " +
+            cable + "을(를) <strong>위쪽</strong> USB-C 포트(아래 사진에서 PC라고 표시된 " +
+            "포트 — 아래쪽 포트는 캠퍼 연결용입니다)에 연결하세요. 그 상태로 2초 정도 더 " +
+            "누르고 있다가 <strong>손을 떼세요</strong>. 손을 뗀 후 <strong>5초가 지나도</strong> " +
+            "화면이 <strong>까맣게(빈 화면)</strong> 남아있으면 성공 신호이고, 보드가 업로드 " +
+            "모드로 들어갔다는 뜻입니다. (손을 뗀 후 몇 초 있다가 평소 화면이 뜨는 경우도 " +
+            "있는데, 그 5초 안에 다시 보인다면 실패한 것이니 처음부터 다시 시도하세요.)";
         },
         plugIn: function (cable) {
           return cable + "로 보드를 이 컴퓨터에 연결하세요.";
