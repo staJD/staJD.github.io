@@ -23,7 +23,7 @@ window.STAJPILOT_DEVICES = [
     id: "guition-jc4880p4-beta",
     name: "Guition JC4880P4 (BETA)",
     subtitle: "4.3\" ESP32-P4 touch display — USB Host mode, less-tested",
-    version: "v0.96.00-beta",
+    version: "v0.96.01-beta",
     manifest: "manifests/guition-jc4880p4-beta.json",
     cable: "USB-C cable",
     cableKo: "USB-C 케이블",
