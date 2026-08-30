@@ -52,12 +52,12 @@ window.STAJPILOT_DEVICES = [
     id: "waveshare-s3-2.0",
     name: "Waveshare ESP32-S3 2.0",
     subtitle: "2\" ESP32-S3 touch display",
-    version: "coming soon",
-    manifest: null,
+    version: "v0.95.00",
+    manifest: "manifests/waveshare-s3-2.0.json",
     cable: "USB-C cable",
     cableKo: "USB-C 케이블",
     notes: [],
-    available: false
+    available: true
   },
   {
     id: "guition-jc3248w535c",

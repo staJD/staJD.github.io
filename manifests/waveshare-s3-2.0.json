@@ -1,0 +1,13 @@
+{
+  "name": "StajPilot - Waveshare ESP32-S3 2.0",
+  "version": "0.95.00",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "../firmware/waveshare-s3-2.0/stajpilot_v0.95.00_WS_S3_2_factory_merged.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
