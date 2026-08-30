@@ -56,6 +56,10 @@ window.STAJPILOT_DEVICES = [
     manifest: "manifests/waveshare-s3-2.0.json",
     cable: "USB-C cable",
     cableKo: "USB-C 케이블",
+    needsBootMode: true,
+    images: {
+      buttons: "images/waveshare-s3-2.0/boot-button.png"
+    },
     notes: [],
     available: true
   },
