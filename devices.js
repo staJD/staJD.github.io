@@ -57,6 +57,7 @@ window.STAJPILOT_DEVICES = [
     cable: "USB-C cable",
     cableKo: "USB-C 케이블",
     needsBootMode: true,
+    singlePort: true,
     images: {
       buttons: "images/waveshare-s3-2.0/boot-button.png"
     },

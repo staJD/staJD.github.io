@@ -405,10 +405,12 @@
         }
       ],
       steps: {
-        bootMode: function (cable) {
+        bootMode: function (cable, singlePort) {
+          const portPhrase = singlePort
+            ? "into the board's USB-C port"
+            : "into the <strong>top</strong> USB-C port (labeled PC in the photo below)";
           return "Press and hold the board's <strong>BOOT</strong> button first, then, while " +
-            "still holding it, plug in the " + cable + " into the <strong>top</strong> USB-C " +
-            "port (labeled PC in the photo below). Keep holding BOOT for about 2 more seconds, <strong>then " +
+            "still holding it, plug in the " + cable + " " + portPhrase + ". Keep holding BOOT for about 2 more seconds, <strong>then " +
             "release it</strong>. If the screen is still <strong>blank/black 5 seconds " +
             "later</strong>, that's the sign it worked and the board is in upload mode. " +
             "(Sometimes the normal display takes a couple seconds to reappear after you let " +
@@ -443,13 +445,19 @@
           "and <strong>\"Logs &amp; Console\"</strong> — that's just the tool's normal menu " +
           "(it looks the same whether you're starting or already finished), so don't click " +
           "either option. Close it with the <strong>X</strong> in the corner instead.",
-        restart:
-          "Unplug the cable from the <strong>top (PC)</strong> port, then connect the " +
-          "<strong>bottom (Kemper)</strong> port to your Kemper as normal — that's how you " +
-          "start running the new firmware." +
-          "<br><strong>The first time it connects to your Kemper, the screen can take about " +
-          "2 minutes to turn on.</strong> That's normal — the board is loading its startup " +
-          "data. Don't unplug it or worry if the screen stays blank for a bit; just wait."
+        restart: function (singlePort) {
+          const swapStep = singlePort
+            ? "Unplug the cable from your computer, then connect it to your Kemper as normal " +
+              "— this board only has one USB-C port, so the same cable and port you used for " +
+              "flashing is what connects to the Kemper."
+            : "Unplug the cable from the <strong>top (PC)</strong> port, then connect the " +
+              "<strong>bottom (Kemper)</strong> port to your Kemper as normal — that's how you " +
+              "start running the new firmware.";
+          return swapStep +
+            "<br><strong>The first time it connects to your Kemper, the screen can take about " +
+            "2 minutes to turn on.</strong> That's normal — the board is loading its startup " +
+            "data. Don't unplug it or worry if the screen stays blank for a bit; just wait.";
+        }
       }
     },
     ko: {
@@ -494,9 +502,12 @@
         }
       ],
       steps: {
-        bootMode: function (cable) {
+        bootMode: function (cable, singlePort) {
+          const portPhrase = singlePort
+            ? "보드의 USB-C 포트에"
+            : "<strong>위쪽</strong> USB-C 포트(아래 사진에서 PC라고 표시됨)에";
           return "보드의 <strong>BOOT</strong> 버튼을 먼저 누르고, 누른 상태에서 " +
-            cable + "을 <strong>위쪽</strong> USB-C 포트(아래 사진에서 PC라고 표시됨)에 " +
+            cable + "을 " + portPhrase + " " +
             "연결하세요. 그 상태로 2초 정도 더 " +
             "누르고 있다가 <strong>손을 떼세요</strong>. 손을 뗀 후 <strong>5초가 지나도</strong> " +
             "화면이 <strong>까맣게(빈 화면)</strong> 남아있으면 성공 신호이고, 보드가 업로드 " +
@@ -533,12 +544,18 @@
           "<strong>\"Logs &amp; Console\"</strong>이 있는 메뉴로 넘어가는데, 이건 처음 시작할 " +
           "때와 똑같이 생긴 이 도구의 기본 메뉴일 뿐이에요 — 아무것도 누르지 마시고, " +
           "모서리의 <strong>X</strong>로 닫으시면 됩니다.",
-        restart:
-          "<strong>위쪽(PC)</strong> 포트에서 케이블을 뽑고, <strong>아래쪽(캠퍼)</strong> " +
-          "포트를 평소처럼 캠퍼에 연결하세요 — 그러면 새 펌웨어로 실행이 시작됩니다." +
-          "<br><strong>캠퍼에 처음 연결하면 화면이 켜지기까지 약 2분 정도 걸릴 수 있습니다.</strong> " +
-          "정상적인 동작입니다(보드가 시작 데이터를 불러오는 중입니다). 화면이 잠시 꺼져 있어도 " +
-          "초조해하지 마시고 그대로 기다려주세요."
+        restart: function (singlePort) {
+          const swapStep = singlePort
+            ? "컴퓨터에서 케이블을 뽑고, 캠퍼에 평소처럼 연결하세요 — 이 보드는 USB-C " +
+              "포트가 하나뿐이라, 플래싱에 쓴 케이블과 포트를 그대로 캠퍼 연결에도 " +
+              "사용합니다."
+            : "<strong>위쪽(PC)</strong> 포트에서 케이블을 뽑고, <strong>아래쪽(캠퍼)</strong> " +
+              "포트를 평소처럼 캠퍼에 연결하세요 — 그러면 새 펌웨어로 실행이 시작됩니다.";
+          return swapStep +
+            "<br><strong>캠퍼에 처음 연결하면 화면이 켜지기까지 약 2분 정도 걸릴 수 있습니다.</strong> " +
+            "정상적인 동작입니다(보드가 시작 데이터를 불러오는 중입니다). 화면이 잠시 꺼져 있어도 " +
+            "초조해하지 마시고 그대로 기다려주세요.";
+        }
       }
     }
   };
@@ -586,7 +603,7 @@
     const cable = (currentLang === "ko" && device.cableKo) ? device.cableKo : device.cable;
 
     if (device.needsBootMode) {
-      steps.push(s.bootMode(cable) + imageBlockFor(device));
+      steps.push(s.bootMode(cable, device.singlePort) + imageBlockFor(device));
     } else {
       steps.push(s.plugIn(cable) + imageBlockFor(device));
     }
@@ -596,7 +613,7 @@
     steps.push(s.eraseDialog);
     steps.push(s.waitFlash);
     steps.push(s.installComplete);
-    steps.push(s.restart);
+    steps.push(s.restart(device.singlePort));
 
     return steps.concat(device.notes || []);
   }
@@ -640,11 +657,17 @@
     installBtn.setAttribute("manifest", device.manifest);
   }
 
+  function deviceFromHash() {
+    const id = (location.hash || "").replace(/^#/, "");
+    if (!id) return null;
+    return devices.find(function (d) { return d.id === id; }) || null;
+  }
+
   function buildPicker() {
     picker.innerHTML = "";
-    devices.forEach(function (device, i) {
+    devices.forEach(function (device) {
       const btn = document.createElement("button");
-      btn.className = "device-btn" + (i === 0 ? " active" : "") + (device.available ? "" : " unavailable");
+      btn.className = "device-btn" + (device === activeDevice ? " active" : "") + (device.available ? "" : " unavailable");
       btn.innerHTML =
         '<div class="name">' + device.name + "</div>" +
         '<div class="sub">' + device.subtitle + "</div>" +
@@ -653,6 +676,7 @@
         if (!device.available) return;
         picker.querySelectorAll(".device-btn").forEach(function (b) { b.classList.remove("active"); });
         btn.classList.add("active");
+        history.replaceState(null, "", "#" + device.id);
         render(device);
       });
       picker.appendChild(btn);
@@ -660,9 +684,12 @@
   }
 
   function renderAll() {
+    if (!activeDevice) {
+      activeDevice = deviceFromHash() || devices[0];
+    }
     renderStatic();
     buildPicker();
-    render(activeDevice || devices[0]);
+    render(activeDevice);
   }
 
   langToggle.querySelectorAll("button").forEach(function (b) {
@@ -671,6 +698,15 @@
       localStorage.setItem("stajpilot-lang", currentLang);
       renderAll();
     });
+  });
+
+  window.addEventListener("hashchange", function () {
+    const d = deviceFromHash();
+    if (d) {
+      activeDevice = d;
+      buildPicker();
+      render(activeDevice);
+    }
   });
 
   if (devices.length) renderAll();
