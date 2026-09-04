@@ -7,7 +7,7 @@ window.STAJPILOT_DEVICES = [
     id: "guition-jc4880p4",
     name: "Guition JC4880P4",
     subtitle: "4.3\" ESP32-P4 touch display",
-    version: "v0.95",
+    version: "v0.96.01",
     manifest: "manifests/guition-jc4880p4.json",
     cable: "USB-C cable",
     cableKo: "USB-C 케이블",
@@ -17,24 +17,6 @@ window.STAJPILOT_DEVICES = [
       ports: "images/guition-jc4880p4/ports.jpg"
     },
     notes: [],
-    available: true
-  },
-  {
-    id: "guition-jc4880p4-beta",
-    name: "Guition JC4880P4 (BETA)",
-    subtitle: "4.3\" ESP32-P4 touch display — USB Host mode, less-tested",
-    version: "v0.96.01-beta",
-    manifest: "manifests/guition-jc4880p4-beta.json",
-    cable: "USB-C cable",
-    cableKo: "USB-C 케이블",
-    needsBootMode: true,
-    images: {
-      buttons: "images/guition-jc4880p4/buttons.jpg",
-      ports: "images/guition-jc4880p4/ports.jpg"
-    },
-    notes: [
-      "Beta build - adds USB Host mode (new territory) alongside the existing Device mode. If you don't need USB Host mode, the stable release above is the safer pick."
-    ],
     available: true
   },
   {
