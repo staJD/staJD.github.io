@@ -20,6 +20,24 @@ window.STAJPILOT_DEVICES = [
     available: true
   },
   {
+    id: "guition-jc4880p4-beta",
+    name: "Guition JC4880P4 (BETA)",
+    subtitle: "4.3\" ESP32-P4 touch display — downstream MIDI sync fix, less-tested",
+    version: "v0.96.03-beta",
+    manifest: "manifests/guition-jc4880p4-beta.json",
+    cable: "USB-C cable",
+    cableKo: "USB-C 케이블",
+    needsBootMode: true,
+    images: {
+      buttons: "images/guition-jc4880p4/buttons.jpg",
+      ports: "images/guition-jc4880p4/ports.jpg"
+    },
+    notes: [
+      "Beta build - fixes Delay/Reverb state getting stuck wrong when a downstream MIDI device (2-inch board, MIDI Captain/PySwitch) is connected, plus shows the firmware version on the boot screen. If you don't need this fix, the stable release above is the safer pick."
+    ],
+    available: true
+  },
+  {
     id: "waveshare-s3-4.3",
     name: "Waveshare ESP32-S3 4.3",
     subtitle: "4.3\" ESP32-S3 touch display",
