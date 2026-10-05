@@ -17,7 +17,8 @@ window.STAJPILOT_DEVICES = [
       ports: "images/guition-jc4880p4/ports.jpg"
     },
     notes: [],
-    available: true
+    available: false,
+    paused: true
   },
   {
     id: "guition-jc4880p4-beta",
@@ -35,7 +36,8 @@ window.STAJPILOT_DEVICES = [
     notes: [
       "Beta build - fixes Delay/Reverb state getting stuck wrong when a downstream MIDI device (2-inch board, MIDI Captain/PySwitch) is connected, plus shows the firmware version on the boot screen. If you don't need this fix, the stable release above is the safer pick."
     ],
-    available: true
+    available: false,
+    paused: true
   },
   {
     id: "waveshare-s3-4.3",
